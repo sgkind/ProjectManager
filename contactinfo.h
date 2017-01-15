@@ -31,6 +31,8 @@ private:
     QPushButton *deleteBtn;
     QPushButton *submitAllBtn;
 
+    void paint();
+
 signals:
 
 public slots:

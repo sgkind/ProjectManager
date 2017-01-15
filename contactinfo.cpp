@@ -34,11 +34,17 @@ ContactInfo::ContactInfo(QWidget *parent) : QWidget(parent)
     searchLayout->addWidget(submitAllBtn);
 
     mainLayout = new QVBoxLayout;
-    //mainLayout->setMargin(10);
-    //mainLayout->setSpacing(6);
     mainLayout->addLayout(searchLayout);
 
+    paint();
+    tableView->setModel(model);
+    tableView->resizeColumnsToContents();
+    mainLayout->addWidget(tableView);
+    setLayout(mainLayout);
+}
 
+void ContactInfo::paint()
+{
     model->setTable(QString("contacts"));
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->select();
@@ -53,13 +59,6 @@ ContactInfo::ContactInfo(QWidget *parent) : QWidget(parent)
     model->setHeaderData(7, Qt::Horizontal, QObject::tr("公司"));
     model->setHeaderData(8, Qt::Horizontal, QObject::tr("部门"));
     model->setHeaderData(9, Qt::Horizontal, QObject::tr("职务"));
-
-
-    tableView->setModel(model);
-    tableView->resizeColumnsToContents();
-    mainLayout->addWidget(tableView);
-    setLayout(mainLayout);
-
 }
 
 void ContactInfo::search()
@@ -68,12 +67,14 @@ void ContactInfo::search()
     QString company = companyLineEdit->text();
     if (name.isEmpty() && company.isEmpty())
     {
-        model->setTable(tr("contacts"));
-        model->select();
+        paint();
+        tableView->resizeColumnsToContents();
+        return;
     }
 
     model->setFilter(QString("contacts.name='%1' or contacts.company='%2'").arg(name).arg(company));
     model->select();
+    return;
 }
 
 void ContactInfo::addContact()
