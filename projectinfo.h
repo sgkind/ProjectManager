@@ -4,23 +4,31 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QTableWidget>
+#include <QTableView>
+#include <QSqlRelationalTableModel>
 
 class ProjectInfo : public QWidget
 {
     Q_OBJECT
 public:
     explicit ProjectInfo(QWidget *parent = 0);
-    QLabel *searchLabel;
-    QLineEdit *searchLineEdit;
+
+
+private:
+    QTableView *tableView;
+    QLineEdit *nameLineEdit;
+    QLineEdit *codeLineEdit;
+    QLineEdit *componentLineEdit;
     QPushButton *searchBtn;
 
-    QTableWidget *projectTable;
+    QSqlRelationalTableModel *model;
+
 
 
 signals:
 
 public slots:
+    void search();
 };
 
 #endif // PROJECTINFO_H

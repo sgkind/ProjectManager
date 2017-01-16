@@ -17,6 +17,7 @@ static bool createConnection()
 
     QSqlQuery query;
 
+/*
     //用户数据表
     query.exec("create table users(id int primary key, name varchar(20) unique, password varchar(32))");
     query.exec("insert into users (id, name, password) values (1, 'sunguanke', '123456')");
@@ -61,7 +62,7 @@ static bool createConnection()
     query.exec("create table contacts (id int primary key, name varchar(20), phone varchar(20), email varchar(40), telephone varchar(20), address varchar(40), post varchar(10), company varchar(40), department varchar(10), position varchar(20))");
     query.exec(QString("insert into contacts values(1, '孙冠珂', '15051877834', 'sguanke@163.com', '025-12345678', '南京市江宁区天元东路228号', '012345', 'sgkind', '办公司', 'ceo')"));
     query.exec(QString("insert into contacts values(2, 'sgk', '17326100153', 'sunguanke@163.com', '025-12345678', '河南省郏县安良镇任庄', '010111', 'sgkind', '研发部', 'cfo')"));
-
+*/
     return true;
 }
 

@@ -4,12 +4,19 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    //setFixedSize(900, 556);      //固定窗口大小
-    //setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    setMinimumSize(970, 560);
+    fileInfo = new FileInfo;
+    projectInfo = new ProjectInfo;
+    contactInfo = new ContactInfo;
+
+    stack = new QStackedWidget(this);
+    stack->addWidget(fileInfo);
+    stack->addWidget(projectInfo);
+    stack->addWidget(contactInfo);
+
+    stack->setMinimumSize(900, 500);
+
     createMenuBar();
-    widget = new Widget(this);
-    setCentralWidget(widget);
+    setCentralWidget(stack);
     setWindowTitle(tr("项目文档管理系系统"));
 }
 
@@ -54,17 +61,17 @@ void MainWindow::on_quitMenu_clicked()
 
 void MainWindow::change0()
 {
-    widget->stack->setCurrentIndex(0);
+    stack->setCurrentIndex(0);
 }
 
 void MainWindow::change1()
 {
-    widget->stack->setCurrentIndex(1);
+    stack->setCurrentIndex(1);
 }
 
 void MainWindow::change2()
 {
-    widget->stack->setCurrentIndex(2);
+    stack->setCurrentIndex(2);
 }
 
 void MainWindow::change_password()

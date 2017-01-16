@@ -16,20 +16,37 @@
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>117</x>
      <y>40</y>
      <width>131</width>
      <height>31</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+    </font>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::NoFrame</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
+   </property>
+   <property name="midLineWidth">
+    <number>0</number>
+   </property>
    <property name="text">
-    <string>欢迎使用项目管理系统</string>
+    <string>欢迎登陆</string>
+   </property>
+   <property name="alignment">
+    <set>Qt::AlignCenter</set>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>84</x>
      <y>124</y>
      <width>54</width>
      <height>12</height>
@@ -42,7 +59,7 @@
   <widget class="QLineEdit" name="pwdLineEdit">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>134</x>
      <y>120</y>
      <width>141</width>
      <height>20</height>
@@ -55,7 +72,7 @@
   <widget class="QPushButton" name="loginBtn">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>84</x>
      <y>170</y>
      <width>75</width>
      <height>23</height>
@@ -68,7 +85,7 @@
   <widget class="QPushButton" name="quitBtn">
    <property name="geometry">
     <rect>
-     <x>190</x>
+     <x>194</x>
      <y>170</y>
      <width>75</width>
      <height>23</height>
@@ -81,7 +98,7 @@
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>80</x>
+     <x>84</x>
      <y>90</y>
      <width>54</width>
      <height>12</height>
@@ -94,7 +111,7 @@
   <widget class="QLineEdit" name="userNameLineEdit">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>134</x>
      <y>88</y>
      <width>141</width>
      <height>20</height>

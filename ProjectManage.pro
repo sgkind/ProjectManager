@@ -16,7 +16,6 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    widget.cpp \
     logindialog.cpp \
     projectinfo.cpp \
     treeitem.cpp \
@@ -32,7 +31,6 @@ SOURCES += main.cpp\
     changepassword.cpp
 
 HEADERS  += mainwindow.h \
-    widget.h \
     connection.h \
     logindialog.h \
     projectinfo.h \

@@ -19,8 +19,8 @@ FileInfo::FileInfo(QWidget *parent) : QWidget(parent)
     sDetailInfo = new SDetailInfo;
     caDetailInfo = new CADetailInfo;
     fileDetailInfo = new FileDetailInfo;
+
     stack = new QStackedWidget(this);
-    stack->setFixedSize(600, 480);
     stack->setFrameStyle(QFrame::Panel | QFrame::Raised);
     stack->addWidget(pDetailInfo);
     stack->addWidget(cDetailInfo);
@@ -44,7 +44,7 @@ FileInfo::FileInfo(QWidget *parent) : QWidget(parent)
     BtnLayout->addWidget(SaveBtn);
 
     QVBoxLayout *RightLayout = new QVBoxLayout;
-    RightLayout->addWidget(stack, 0, Qt::AlignHCenter);
+    RightLayout->addWidget(stack);
     RightLayout->addLayout(BtnLayout);
 
     mainLayout = new QHBoxLayout(this);
@@ -56,6 +56,9 @@ FileInfo::FileInfo(QWidget *parent) : QWidget(parent)
     mainLayout->setSpacing(5);
     mainLayout->addWidget(treeView);
     mainLayout->addLayout(RightLayout);
+    mainLayout->setStretch(0, 2);
+    mainLayout->setStretch(1, 3);
+
 }
 
 void FileInfo::paint()
@@ -70,7 +73,7 @@ void FileInfo::paint()
     //treeView开启右键菜单
     treeView->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    treeView->setFixedSize(350, 520);
+    //treeView->setFixedSize(350, 520);
     treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
@@ -107,6 +110,7 @@ void FileInfo::customContextMenu(const QPoint &)
     {
         menu->addAction(QString(tr("替换文档")), this, SLOT(slotReplaceFile()));
         menu->addAction(QString(tr("保存新版本")), this, SLOT(slotNewVersion()));
+        menu->addAction(QString(tr("打开所在文件夹")), this, SLOT(openFolder()));
     }
 
     menu->addAction(QString(tr("重命名")), this, SLOT(slotRename()));
@@ -164,63 +168,68 @@ void FileInfo::treeViewClick(const QModelIndex &index)
 void FileInfo::slotNew(QString title, QString tips, bool flag)
 {
     query.exec(QString("select max(id) from items"));
-        query.next();
-        int index = query.value(0).toInt() + 1;
+    query.next();
+    int index = query.value(0).toInt() + 1;
 
-        QModelIndex modelIndex = treeView->currentIndex();
-        TreeItem *item = model->getItem(modelIndex);
-        QString string = item->data(1).toString();
-        QString path = string + '/' + QString::number(index);
+    QModelIndex modelIndex = treeView->currentIndex();
+    TreeItem *item = model->getItem(modelIndex);
+    QString string = item->data(1).toString();
+    QString path = string + '/' + QString::number(index);
 
-        query.exec(QString("select id from items where path='%1'").arg(string));
-        query.next();
-        int pid = query.value(0).toInt();
+    query.exec(QString("select id from items where path='%1'").arg(string));
+    query.next();
+    int pid = query.value(0).toInt();
 
-        bool ok;
-        QString name = QInputDialog::getText(this, title, tips, QLineEdit::Normal, QString(""), &ok);
-        if (flag) {
-            QDateTime date = QDateTime::currentDateTime();
-            QString dates = date.toString("yyyy-MM-dd");
-            if(name.count('-')) {
-               name += '-' + dates;
-            } else {
-                name += "-1-" + dates;
-            }
+    bool ok;
+    QString name = QInputDialog::getText(this, title, tips, QLineEdit::Normal, QString(""), &ok);
+    if (flag) {
+        QDateTime date = QDateTime::currentDateTime();
+        QString dates = date.toString("yyyy-MM-dd");
+        if(name.count('-')) {
+           name += '-' + dates;
+        } else {
+            name += "-1-" + dates;
         }
-        if (ok && !name.isEmpty()) {
-            query.exec(QString("insert into items values(NULL, '%1', '%2', '%3')").arg(name).arg(path).arg(pid));
-        }
-        int childCount = item->childCount();
-        model->insertRows(childCount, 1, modelIndex);
+    }
+    if (ok && !name.isEmpty()) {
+        query.exec(QString("insert into items values(NULL, '%1', '%2', '%3')").arg(name).arg(path).arg(pid));
+    } else {
+        return;
+    }
+    int childCount = item->childCount();
+    model->insertRows(childCount, 1, modelIndex);
 
-        QModelIndex nowIndex0 = model->index(childCount, 0, modelIndex);
-        model->setData(nowIndex0, name);
-        QModelIndex nowIndex1 = model->index(childCount, 1, modelIndex);
-        model->setData(nowIndex1, path);
-        treeView->expand(modelIndex);
+    QModelIndex nowIndex0 = model->index(childCount, 0, modelIndex);
+    model->setData(nowIndex0, name);
+    QModelIndex nowIndex1 = model->index(childCount, 1, modelIndex);
+    model->setData(nowIndex1, path);
+    treeView->expand(modelIndex);
 }
 
 void FileInfo::slotNewProject()
 {
     query.exec(QString("select max(id) from items"));
-        query.next();
-        int index = query.value(0).toInt() + 1;
+    query.next();
+    int index = query.value(0).toInt() + 1;
 
-        bool ok;
-        QString name = QInputDialog::getText(this, tr("添加新项目"), tr("请输入项目名称："), QLineEdit::Normal, QString(""), &ok);
-        QString path = '/' + QString::number(index);
-        if (ok && !name.isEmpty()) {
-            query.exec(QString("insert into items values(NULL, '%1','%2', 0)").arg(name).arg(path));
-        }
-        QModelIndex parent = treeView->currentIndex();
-        TreeItem *item = model->getItem(parent);
-        int childCount = item->childCount();
-        model->insertRows(childCount, 1, parent);
+    bool ok;
+    QString name = QInputDialog::getText(this, tr("添加新项目"), tr("请输入项目名称："), QLineEdit::Normal, QString(""), &ok);
+    QString path = '/' + QString::number(index);
+    if (ok && !name.isEmpty()) {
+        query.exec(QString("insert into items values(NULL, '%1','%2', 0)").arg(name).arg(path));
+    } else {
+        return ;
+    }
+    QModelIndex modelIndex = treeView->currentIndex();
+    QModelIndex parent = model->parent(modelIndex);
+    TreeItem *item = model->getItem(parent);
+    int childCount = item->childCount();
+    model->insertRows(childCount, 1, parent);
 
-        QModelIndex nowIndex0 = model->index(childCount, 0, parent);
-        model->setData(nowIndex0, name);
-        QModelIndex nowIndex1 = model->index(childCount, 1, parent);
-        model->setData(nowIndex1, path);
+    QModelIndex nowIndex0 = model->index(childCount, 0, parent);
+    model->setData(nowIndex0, name);
+    QModelIndex nowIndex1 = model->index(childCount, 1, parent);
+    model->setData(nowIndex1, path);
 }
 
 void FileInfo::slotNewComponent()
@@ -370,7 +379,7 @@ void FileInfo::slotNewVersion()
         QString address = query.value(1).toString();
         QFileInfo fileInfo(address);
         QString fileName = fileInfo.fileName();
-        QString newAddress = wpath + fileName;
+        QString newAddress = wpath + '/' + fileName;
 
         File file(path);
         if (!file.getAddress().isEmpty())

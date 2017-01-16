@@ -1,12 +1,15 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include "widget.h"
 #include "utility.h"
 #include "changepassword.h"
+#include "projectinfo.h"
+#include "fileinfo.h"
+#include "contactinfo.h"
 
 #include <QMainWindow>
 #include <QMenuBar>
+#include <QStackedWidget>
 
 class MainWindow : public QMainWindow
 {
@@ -16,7 +19,7 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    Widget *widget;
+    //Widget *widget;
 
     QMenu *manageMenu;
     QMenu *passwordMenu;
@@ -26,6 +29,12 @@ public:
     QAction *otherAction;
     QAction *quitAction;
     QAction *passwordAction;
+
+private:
+    QStackedWidget *stack;
+    ProjectInfo *projectInfo;
+    FileInfo *fileInfo;
+    ContactInfo *contactInfo;
 
 private slots:
     void on_quitMenu_clicked();
